@@ -33,6 +33,11 @@ import javax.sound.sampled.AudioInputStream;
     import javax.sound.sampled.Clip;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
+import static javax.swing.GroupLayout.Alignment.CENTER;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import static javax.swing.SwingConstants.BOTTOM;
+import static javax.swing.SwingConstants.TOP;
 
 /**
  *
@@ -80,13 +85,13 @@ public class MainWindow extends javax.swing.JFrame {
         menuExitProgram = new javax.swing.JMenuItem();
         Edit = new javax.swing.JMenu();
         menuAutoBackupp = new javax.swing.JCheckBoxMenuItem();
+        menuEditTerrainControlINI = new javax.swing.JMenuItem();
         Help = new javax.swing.JMenu();
         menuOpenHelp = new javax.swing.JMenuItem();
         menuOpenAbout = new javax.swing.JMenuItem();
         menuGoToTerrainControl = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setPreferredSize(new java.awt.Dimension(800, 600));
         setSize(new java.awt.Dimension(800, 600));
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosed(java.awt.event.WindowEvent evt) {
@@ -174,6 +179,14 @@ public class MainWindow extends javax.swing.JFrame {
         });
         Edit.add(menuAutoBackupp);
 
+        menuEditTerrainControlINI.setText("TerrainControl.ini");
+        menuEditTerrainControlINI.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                menuEditTerrainControlINIMousePressed(evt);
+            }
+        });
+        Edit.add(menuEditTerrainControlINI);
+
         jMenuBar1.add(Edit);
 
         Help.setText("Help");
@@ -247,6 +260,7 @@ public class MainWindow extends javax.swing.JFrame {
             this.HideOpenFileFrame();
             menuFileOpenTerrainControlFolder.setEnabled(false);
             menuCloseProject.setEnabled(true);
+            Edit.setEnabled(true);
             JOptionPane.showMessageDialog(rootPane, "Project was successfully loaded!");
             }
             
@@ -262,6 +276,7 @@ public class MainWindow extends javax.swing.JFrame {
     private void menuFileOpenTerrainControlFolderMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuFileOpenTerrainControlFolderMousePressed
         if (this.ProjectLoaded == false) {
             JOptionPane.showMessageDialog(null, "You did indeed press the menu button!");
+            filechooserOpenTerrainControlFolder.setSize(730, 530);
             filechooserOpenTerrainControlFolder.setEnabled(true);
             filechooserOpenTerrainControlFolder.setVisible(true);
         } 
@@ -290,6 +305,7 @@ public class MainWindow extends javax.swing.JFrame {
         if (result == JOptionPane.YES_OPTION) {
             menuFileOpenTerrainControlFolder.setEnabled(true);
             menuCloseProject.setEnabled(false);
+            Edit.setEnabled(false);
             operations.ResetMemory();
         }
     }//GEN-LAST:event_menuCloseProjectMousePressed
@@ -306,25 +322,54 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_menuGoToTerrainControlMousePressed
 
     private void menuOpenAboutMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuOpenAboutMousePressed
-        JLabel background = new JLabel(new ImageIcon("src/main/resources/bootimage.png"));
-       
-       JFrame about = new javax.swing.JFrame();
-       about.setUndecorated(true);
-       about.add(background);
-       
-       about.setSize(724, 424);
-        
-      
-    about.addMouseListener(new MouseAdapter() {
-     @Override
-     public void mousePressed(MouseEvent e) {
-         
-         about.setVisible(false);
-         about.setEnabled(false);
-         
-         
-     }
-  });
+        try {
+            JLabel background = new JLabel(new ImageIcon("src/main/resources/TerrainControlGui-icon.png"));
+            JTextArea textarea = new JTextArea();
+            textarea.setSize(380, 256);
+            textarea.append("TerrainControl GUI\n"); textarea.append("Written by\n");
+            textarea.append("\n"); textarea.append("Tenemir\n of \nRealm of Theramir\n");
+            textarea.append("\n");
+            textarea.append("Copyright \u00A9 2016 Tenemir/Realm Of Theramir\n");
+            textarea.append("This software is provided AS IS, No guarantees are made.\n");
+            textarea.append("Do not sell or redistribute the sourcecode, any cloning\n of the sourcecode you make at the\n");
+            textarea.append("Github Page is for your private, personal use only. \nDo not redistribute your modifications!!!\n");
+            textarea.append("\n");
+            textarea.append("'TerrainControl' is \u00A9 to their respective parties.\n");
+            
+            JFrame about = new javax.swing.JFrame();
+            about.setUndecorated(true);
+            background.setVerticalAlignment(BOTTOM);
+            
+            about.add(textarea);
+            about.add(background);
+            
+            background.setVerticalAlignment(BOTTOM);
+            about.setSize(400, 512);
+            about.setLocationRelativeTo(null);
+            about.setEnabled(true);
+            about.setVisible(true);
+            
+            String filename = "src/main/resources/thunderdome.wav";
+            
+            Clip clip = AudioSystem.getClip();
+            clip.open(AudioSystem.getAudioInputStream(new File(filename)));
+            clip.start();
+           
+            
+            about.addMouseListener(new MouseAdapter() {
+                @Override
+                public void mousePressed(MouseEvent e) {
+                    
+                    about.setVisible(false);
+                    about.setEnabled(false);
+                    clip.stop();
+                    clip.close();
+                    
+                    
+                }
+            });   } catch (LineUnavailableException | IOException | UnsupportedAudioFileException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_menuOpenAboutMousePressed
 
     private void menuAutoBackuppItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_menuAutoBackuppItemStateChanged
@@ -334,6 +379,11 @@ public class MainWindow extends javax.swing.JFrame {
             
         }
     }//GEN-LAST:event_menuAutoBackuppItemStateChanged
+
+    private void menuEditTerrainControlINIMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuEditTerrainControlINIMousePressed
+        terraincontrol_ini_frame jframe = new terraincontrol_ini_frame();
+        jframe.setVisible(true);
+    }//GEN-LAST:event_menuEditTerrainControlINIMousePressed
 
     /**
      * @param args the command line arguments
@@ -409,13 +459,6 @@ public class MainWindow extends javax.swing.JFrame {
         
    }
    
-   public void Aboutmusic(boolean play) {
-       
-    
-
-       
-   }
-   
   
    
 
@@ -429,6 +472,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JCheckBoxMenuItem menuAutoBackupp;
     private javax.swing.JMenuItem menuCloseProject;
+    private javax.swing.JMenuItem menuEditTerrainControlINI;
     private javax.swing.JMenuItem menuExitProgram;
     private javax.swing.JMenuItem menuFileOpenTerrainControlFolder;
     private javax.swing.JMenuItem menuGoToTerrainControl;

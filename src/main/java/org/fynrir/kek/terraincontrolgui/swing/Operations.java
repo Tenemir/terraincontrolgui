@@ -97,6 +97,7 @@ public class Operations {
             
         try {
             setTerrainControlINI(readFile(path));
+            System.out.println(getTerrainControlINI());
         } catch (IOException ex) {
             Logger.getLogger(Operations.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -278,13 +279,49 @@ public class Operations {
   //Read File Line By Line
   while ((strLine = br.readLine()) != null)   {
   // Print the content on the console
-  System.out.println (strLine);
-  text += strLine;
+  //System.out.println (strLine);
+  text += strLine + "\n";
   }
   //Close the input stream
   in.close();
         
         return text;
+    }
+    
+    public String removeComments(String text) {
+        String lines = text;
+        
+                lines = lines.replaceAll("(.*#.*\r?\n)", "");
+                
+          
+        
+        
+        
+        System.out.println("-------------------------------------");
+        System.out.println(lines);
+        System.out.println("-------------------------------------");
+        return lines;
+    }
+    
+    public static int countLines(String str) {
+    if(str == null || str.isEmpty())
+    {
+        return 0;
+    }
+    int lines = 1;
+    int pos = 0;
+    while ((pos = str.indexOf("\n", pos) + 1) != 0) {
+        lines++;
+    }
+    return lines;
+    }
+    
+    public String getTerrainControlINISettings () {
+        String string = getTerrainControlINI();
+        System.out.println(string);
+        string = removeComments(string);
+        
+        return string;
     }
     
     
