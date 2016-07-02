@@ -29,6 +29,9 @@ That is not made in Java and is not cross plattform in any way. Maybe with Wine 
 My software is made in JAVA, bar some quirks. It will work on any plattform that supports Java.
 Whoever writes in a language that is very difficult to port to other operating systems, or outright does not support more operating systems is a casual lazybone.
 
+Or just boot up Micro$hit and use TCEE for the advanced stuff, and then use this for whenever you find yourself
+without Micro$hit.
+
 ## What can it do so far?
 
 *Load the paths for the TerrainControl Folder, and The GlobalBiomes folder, The WorldObjects folder, and the entirety of the
