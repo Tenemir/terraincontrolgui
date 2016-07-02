@@ -23,6 +23,7 @@ Software is provided AS IS. No Guarantees are made.
 
 That is not made in Java and is not cross plattform in any way. Maybe with Wine but who the fuck wants to do that?
 My software is made in JAVA, bar some quirks. It will work on any plattform that supports Java.
+Whoever writes in a language that is very difficult to port to other operating systems, or outright does not support more operating systems is a casual lazybone.
 
 ## What can it do so far?
 
