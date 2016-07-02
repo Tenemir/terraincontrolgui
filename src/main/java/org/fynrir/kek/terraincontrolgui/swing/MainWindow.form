@@ -33,6 +33,9 @@
                 <Property name="text" type="java.lang.String" value="Save All"/>
                 <Property name="toolTipText" type="java.lang.String" value="&lt;html&gt;&#xa;This will save all settings you have made to the TerrainControl Folder!&lt;br&gt;&#xa;Usefull if you have made several changes in several files, and want to save all of them, &lt;br&gt;&#xa;instead of having to save all of them one-by-one."/>
               </Properties>
+              <Events>
+                <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="menuSaveAllSoFarMousePressed"/>
+              </Events>
             </MenuItem>
             <MenuItem class="javax.swing.JMenuItem" name="menuOpenSettings">
               <Properties>
@@ -59,7 +62,6 @@
           <SubComponents>
             <MenuItem class="javax.swing.JCheckBoxMenuItem" name="menuAutoBackupp">
               <Properties>
-                <Property name="selected" type="boolean" value="true"/>
                 <Property name="text" type="java.lang.String" value="Auto Backupp"/>
               </Properties>
               <Events>

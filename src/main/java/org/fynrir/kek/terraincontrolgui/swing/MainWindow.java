@@ -150,6 +150,11 @@ public class MainWindow extends javax.swing.JFrame {
 
         menuSaveAllSoFar.setText("Save All");
         menuSaveAllSoFar.setToolTipText("<html>\nThis will save all settings you have made to the TerrainControl Folder!<br>\nUsefull if you have made several changes in several files, and want to save all of them, <br>\ninstead of having to save all of them one-by-one.");
+        menuSaveAllSoFar.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                menuSaveAllSoFarMousePressed(evt);
+            }
+        });
         File.add(menuSaveAllSoFar);
 
         menuOpenSettings.setText("Options");
@@ -170,7 +175,6 @@ public class MainWindow extends javax.swing.JFrame {
         Edit.setText("Edit");
         Edit.setEnabled(false);
 
-        menuAutoBackupp.setSelected(true);
         menuAutoBackupp.setText("Auto Backupp");
         menuAutoBackupp.addItemListener(new java.awt.event.ItemListener() {
             public void itemStateChanged(java.awt.event.ItemEvent evt) {
@@ -381,9 +385,17 @@ public class MainWindow extends javax.swing.JFrame {
     }//GEN-LAST:event_menuAutoBackuppItemStateChanged
 
     private void menuEditTerrainControlINIMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuEditTerrainControlINIMousePressed
-        terraincontrol_ini_frame jframe = new terraincontrol_ini_frame();
+        terraincontrol_ini_frame jframe = new terraincontrol_ini_frame(this.operations);
         jframe.setVisible(true);
     }//GEN-LAST:event_menuEditTerrainControlINIMousePressed
+
+    private void menuSaveAllSoFarMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_menuSaveAllSoFarMousePressed
+        try {
+            operations.SaveAll();
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_menuSaveAllSoFarMousePressed
 
     /**
      * @param args the command line arguments

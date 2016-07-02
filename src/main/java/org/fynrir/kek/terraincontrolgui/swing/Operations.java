@@ -5,21 +5,12 @@
  */
 package org.fynrir.kek.terraincontrolgui.swing;
 
-import java.io.BufferedReader;
-import java.io.DataInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.awt.Component;
+import java.io.*;
 import java.lang.reflect.Array;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -33,15 +24,17 @@ import javax.swing.JOptionPane;
  */
 public class Operations {
     
-    private String[][] FromImageBiomeColors; //Index 1: Name of biome, Index 2: The hex color of the biome as written in the Biome .ini file.
-    private String[][][][] BO3ObjectsWorld; //Index 1: World name, Index 2: Category (folder), 0 is 'Undefined'. Index 3: Name of object, Index 4: Contents of bo3 file.
-    private String[][][] BO3ObjectsGlobal; //Index 1: Category (folder), 0 is 'undefined'. Index 2: Name of object, Index 3: Contents of .bo3 file.
-    private String[][][] BiomesWorld; //Index 1: World name, Index 2: Biome name, Index 3: Contents of the Biome .ini .
-    private String[][] BiomesGlobal; //Index 1: Biome name, Index 2: Contents of the biome .ini file.
-    private String TerrainControlINI = ""; //The contents of the TerrainControl.ini
-    private String[][] WorldConfigINI; //First index is the name of the world. And the second index is the contents of it's WorldConfig.ini file.
-    private String[][] BiomeConfigsINI; 
+    private HashMap[][] FromImageBiomeColors; //Index 1: Name of biome, Index 2: The hex color of the biome as written in the Biome .ini file.
+    private HashMap[][][][] BO3ObjectsWorld; //Index 1: World name, Index 2: Category (folder), 0 is 'Undefined'. Index 3: Name of object, Index 4: Contents of bo3 file.
+    private HashMap[][][] BO3ObjectsGlobal; //Index 1: Category (folder), 0 is 'undefined'. Index 2: Name of object, Index 3: Contents of .bo3 file.
+    private HashMap[][][] BiomesWorld; //Index 1: World name, Index 2: Biome name, Index 3: Contents of the Biome .ini .
+    private HashMap[][] BiomesGlobal; //Index 1: Biome name, Index 2: Contents of the biome .ini file.
+    private String TerrainControlINI; //The contents of the TerrainControl.ini
+    private HashMap[][] WorldConfigINI; //First index is the name of the world. And the second index is the contents of it's WorldConfig.ini file.
+    private HashMap[][] BiomeConfigsINI; 
     private String TerrainControlFolderPath;
+    private ArrayList TerrainControlFilePaths;
+    private ArrayList TerrainControlFilePathsIndexes;
     
     
     
@@ -92,12 +85,15 @@ public class Operations {
                 CopyOfArrayList.set(i, trimmedpath);
             }
             
-            int index = CopyOfArrayList.indexOf("TerrainControl.ini");
-            String path = filepaths.get(index).toString();
+        int index = CopyOfArrayList.indexOf("TerrainControl.ini");
+        this.TerrainControlFilePathsIndexes = CopyOfArrayList;
+        this.TerrainControlFilePaths = filepaths;
+        String path = filepaths.get(index).toString();
             
         try {
-            setTerrainControlINI(readFile(path));
-            System.out.println(getTerrainControlINI());
+            String text = readFile(path);
+            setTerrainControlINI(text);
+            
         } catch (IOException ex) {
             Logger.getLogger(Operations.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -137,131 +133,7 @@ public class Operations {
         
     }
 
-    /**
-     * @return the FromImageBiomeColors
-     */
-    public String[][] getFromImageBiomeColors() {
-        return FromImageBiomeColors;
-    }
-
-    /**
-     * @param FromImageBiomeColors the FromImageBiomeColors to set
-     */
-    public void setFromImageBiomeColors(String[][] FromImageBiomeColors) {
-        this.FromImageBiomeColors = FromImageBiomeColors;
-    }
-
-    /**
-     * @return the BO3ObjectsWorld
-     */
-    public String[][][][] getBO3ObjectsWorld() {
-        return BO3ObjectsWorld;
-    }
-
-    /**
-     * @param BO3ObjectsWorld the BO3ObjectsWorld to set
-     */
-    public void setBO3ObjectsWorld(String[][][][] BO3ObjectsWorld) {
-        this.BO3ObjectsWorld = BO3ObjectsWorld;
-    }
-
-    /**
-     * @return the BO3ObjectsGlobal
-     */
-    public String[][][] getBO3ObjectsGlobal() {
-        return BO3ObjectsGlobal;
-    }
-
-    /**
-     * @param BO3ObjectsGlobal the BO3ObjectsGlobal to set
-     */
-    public void setBO3ObjectsGlobal(String[][][] BO3ObjectsGlobal) {
-        this.BO3ObjectsGlobal = BO3ObjectsGlobal;
-    }
-
-    /**
-     * @return the BiomesWorld
-     */
-    public String[][][] getBiomesWorld() {
-        return BiomesWorld;
-    }
-
-    /**
-     * @param BiomesWorld the BiomesWorld to set
-     */
-    public void setBiomesWorld(String[][][] BiomesWorld) {
-        this.BiomesWorld = BiomesWorld;
-    }
-
-    /**
-     * @return the BiomesGlobal
-     */
-    public String[][] getBiomesGlobal() {
-        return BiomesGlobal;
-    }
-
-    /**
-     * @param BiomesGlobal the BiomesGlobal to set
-     */
-    public void setBiomesGlobal(String[][] BiomesGlobal) {
-        this.BiomesGlobal = BiomesGlobal;
-    }
-
-    /**
-     * @return the TerrainControlINI
-     */
-    public String getTerrainControlINI() {
-        return TerrainControlINI;
-    }
-
-    /**
-     * @param TerrainControlINI the TerrainControlINI to set
-     */
-    public void setTerrainControlINI(String TerrainControlINI) {
-        this.TerrainControlINI = TerrainControlINI;
-    }
-
-    /**
-     * @return the WorldConfigINI
-     */
-    public String[][] getWorldConfigINI() {
-        return WorldConfigINI;
-    }
-
-    /**
-     * @param WorldConfigINI the WorldConfigINI to set
-     */
-    public void setWorldConfigINI(String[][] WorldConfigINI) {
-        this.WorldConfigINI = WorldConfigINI;
-    }
-
-    /**
-     * @return the BiomeConfigsINI
-     */
-    public String[][] getBiomeConfigsINI() {
-        return BiomeConfigsINI;
-    }
-
-    /**
-     * @param BiomeConfigsINI the BiomeConfigsINI to set
-     */
-    public void setBiomeConfigsINI(String[][] BiomeConfigsINI) {
-        this.BiomeConfigsINI = BiomeConfigsINI;
-    }
-
-    /**
-     * @return the TerrainControlFolderPath
-     */
-    public String getTerrainControlFolderPath() {
-        return TerrainControlFolderPath;
-    }
-
-    /**
-     * @param TerrainControlFolderPath the TerrainControlFolderPath to set
-     */
-    public void setTerrainControlFolderPath(String TerrainControlFolderPath) {
-        this.TerrainControlFolderPath = TerrainControlFolderPath;
-    }
+    
     
     
     public String readFile(String path) throws FileNotFoundException, IOException {
@@ -290,18 +162,29 @@ public class Operations {
     
     public String removeComments(String text) {
         String lines = text;
-        
+//        System.out.println("-------------------------------------");
+//        System.out.println("variable lines in removecomments contains:");
+//        System.out.println("-------------------------------------");
+//        System.out.println(lines);
+//        System.out.println("-------------------------------------");
+//        System.out.println("Attempting to replaceall lines containing # with nothing");
+//        System.out.println("-------------------------------------");
                 lines = lines.replaceAll("(.*#.*\r?\n)", "");
-                
+        //System.out.println("-------------------------------------");
+                lines = lines.replaceAll("((?m)^\\s+)", "");
           
         
         
         
-        System.out.println("-------------------------------------");
-        System.out.println(lines);
-        System.out.println("-------------------------------------");
+//        System.out.println("-------------------------------------");
+//        System.out.println("variable lines should now contain only the lines with no comments.");
+//        System.out.println("-------------------------------------");
+//        System.out.println(lines);
+//        System.out.println("-------------------------------------");
         return lines;
     }
+    
+    
     
     public static int countLines(String str) {
     if(str == null || str.isEmpty())
@@ -318,12 +201,234 @@ public class Operations {
     
     public String getTerrainControlINISettings () {
         String string = getTerrainControlINI();
-        System.out.println(string);
         string = removeComments(string);
         
         return string;
     }
     
+    public HashMap LoadTerrainControlInitoTCINIEditor () {
+        String settings = getTerrainControlINISettings();
+        String lines[] = settings.split("\r?\n");
+        String linesArrayFixed[] = new String[3];
+        for (int i = 1; i < lines.length; i++) {
+            linesArrayFixed[i-1] = lines[i];
+        }
+        
+        String SettingLineToBeSplitted;
+        String[] DivideSettingNameAndValue;
+        String[] SettingLineSplittedValue = new String[3];
+        String[] SettingLineSplittedKey = new String[3];
+        String Key;
+        String Value;
+        HashMap hm = new HashMap();
+        int NumberOfLines = countLines(settings);
+        for (int i = 0; i < linesArrayFixed.length; i++) {
+            
+            SettingLineToBeSplitted = linesArrayFixed[i];
+            
+            
+            //System.out.println(SettingLineToBeSplitted);
+            DivideSettingNameAndValue = SettingLineToBeSplitted.split(":");
+            //System.out.println(DivideSettingNameAndValue[0]);
+            //System.out.println(DivideSettingNameAndValue[1]);
+            
+            Key = DivideSettingNameAndValue[0];
+            Value = DivideSettingNameAndValue[1];
+            
+            
+                SettingLineSplittedValue[i] = Value.trim();
+            SettingLineSplittedKey[i] = Key.trim(); 
+            
+                
+        }
+        
+        JOptionPane.showConfirmDialog(null, "Lol not even triggering my jimmes.");
+        //System.out.println(Arrays.toString(SettingLineSplittedKey));
+        //System.out.println(Arrays.toString(SettingLineSplittedValue));
+        
+        for (int i = 0; i < SettingLineSplittedKey.length; i++) {
+                
+            hm.put(SettingLineSplittedKey[i], SettingLineSplittedValue[i]);
+            
+            }
+        
+//        System.out.println("---------------------------------");
+//        System.out.println("Trying to print the hashmap that results from the method LoadTerrainControlInitoTCINIEditor");
+//        System.out.println("---------------------------------");
+//        System.out.println(hm);
+//        System.out.println("---------------------------------");
+//        System.out.println(hm.get("SettingsMode"));
+//        System.out.println("---------------------------------");
+//        System.out.println(hm.get("BiomeConfigExtension"));
+//        System.out.println("---------------------------------");
+//        System.out.println(hm.get("LogLevel"));
+//        System.out.println("---------------------------------");
+        return hm;
+    }
     
+    public String SaveTerrainControlIniToClassObject(String SettingsMode, String LogLevel, String BiomeConfigExtension) {
+        String ini = getTerrainControlINI();
+        System.out.println("--------------------------------------");
+        System.out.println(SettingsMode);
+        System.out.println(LogLevel);
+        System.out.println(BiomeConfigExtension);
+        System.out.println("--------------------------------------");
+        ini = ini.replaceAll("(?m-i)^.*?SettingsMode.*$", SettingsMode);
+        ini = ini.replaceAll("(?m-i)^.*?LogLevel.*$", LogLevel);
+        ini = ini.replaceAll("(?m-i)^.*?BiomeConfigExtension.*$", BiomeConfigExtension);
+        System.out.println(ini);
+        setTerrainControlINI(ini);
+        
+        
+        //regular expression: ^.*SettingsMode.*$
+        //regular expression: ^.*LogLevel.*$
+        //regular expression: ^.*BiomeConfigExtension.*$
+        String Success = "Success";
+        return Success;
+    }
+    
+    
+
+    /**
+     * @return the FromImageBiomeColors
+     */
+    public HashMap[][] getFromImageBiomeColors() {
+        return FromImageBiomeColors;
+    }
+
+    /**
+     * @param FromImageBiomeColors the FromImageBiomeColors to set
+     */
+    public void setFromImageBiomeColors(HashMap[][] FromImageBiomeColors) {
+        this.FromImageBiomeColors = FromImageBiomeColors;
+    }
+
+    /**
+     * @return the BO3ObjectsWorld
+     */
+    public HashMap[][][][] getBO3ObjectsWorld() {
+        return BO3ObjectsWorld;
+    }
+
+    /**
+     * @param BO3ObjectsWorld the BO3ObjectsWorld to set
+     */
+    public void setBO3ObjectsWorld(HashMap[][][][] BO3ObjectsWorld) {
+        this.BO3ObjectsWorld = BO3ObjectsWorld;
+    }
+
+    /**
+     * @return the BO3ObjectsGlobal
+     */
+    public HashMap[][][] getBO3ObjectsGlobal() {
+        return BO3ObjectsGlobal;
+    }
+
+    /**
+     * @param BO3ObjectsGlobal the BO3ObjectsGlobal to set
+     */
+    public void setBO3ObjectsGlobal(HashMap[][][] BO3ObjectsGlobal) {
+        this.BO3ObjectsGlobal = BO3ObjectsGlobal;
+    }
+
+    /**
+     * @return the BiomesWorld
+     */
+    public HashMap[][][] getBiomesWorld() {
+        return BiomesWorld;
+    }
+
+    /**
+     * @param BiomesWorld the BiomesWorld to set
+     */
+    public void setBiomesWorld(HashMap[][][] BiomesWorld) {
+        this.BiomesWorld = BiomesWorld;
+    }
+
+    /**
+     * @return the BiomesGlobal
+     */
+    public HashMap[][] getBiomesGlobal() {
+        return BiomesGlobal;
+    }
+
+    /**
+     * @param BiomesGlobal the BiomesGlobal to set
+     */
+    public void setBiomesGlobal(HashMap[][] BiomesGlobal) {
+        this.BiomesGlobal = BiomesGlobal;
+    }
+
+    /**
+     * @return the TerrainControlINI
+     */
+    public String getTerrainControlINI() {
+        return TerrainControlINI;
+    }
+
+    /**
+     * @param TerrainControlINI the TerrainControlINI to set
+     */
+    public void setTerrainControlINI(String TerrainControlINI) {
+        this.TerrainControlINI = TerrainControlINI;
+    }
+
+    /**
+     * @return the WorldConfigINI
+     */
+    public HashMap[][] getWorldConfigINI() {
+        return WorldConfigINI;
+    }
+
+    /**
+     * @param WorldConfigINI the WorldConfigINI to set
+     */
+    public void setWorldConfigINI(HashMap[][] WorldConfigINI) {
+        this.WorldConfigINI = WorldConfigINI;
+    }
+
+    /**
+     * @return the BiomeConfigsINI
+     */
+    public HashMap[][] getBiomeConfigsINI() {
+        return BiomeConfigsINI;
+    }
+
+    /**
+     * @param BiomeConfigsINI the BiomeConfigsINI to set
+     */
+    public void setBiomeConfigsINI(HashMap[][] BiomeConfigsINI) {
+        this.BiomeConfigsINI = BiomeConfigsINI;
+    }
+
+    /**
+     * @return the TerrainControlFolderPath
+     */
+    public String getTerrainControlFolderPath() {
+        return TerrainControlFolderPath;
+    }
+
+    /**
+     * @param TerrainControlFolderPath the TerrainControlFolderPath to set
+     */
+    public void setTerrainControlFolderPath(String TerrainControlFolderPath) {
+        this.TerrainControlFolderPath = TerrainControlFolderPath;
+    }
+    
+    public void SaveAll() throws FileNotFoundException, IOException {
+        //Saving the TerrainControl.ini settings to it's file.
+        int index = this.TerrainControlFilePathsIndexes.indexOf("TerrainControl.ini");
+        String filepath = this.TerrainControlFilePaths.get(index).toString();
+        System.out.println(filepath);
+        File myFoo = new File(filepath);
+        FileOutputStream fooStream = new FileOutputStream(myFoo, false); // true to append
+                                                                 // false to overwrite.
+        byte[] myBytes = getTerrainControlINI().getBytes();
+        fooStream.write(myBytes);
+        fooStream.close();
+        //Done saving.
+
+
+    }
     
 }
