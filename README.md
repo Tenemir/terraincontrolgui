@@ -1,5 +1,5 @@
 # terraincontrolgui
-A GUI for the Terrain Control Plugin for Minecraft.
+A Java based GUI for the Terrain Control Plugin for Minecraft.
 
 Clone repository into a folder on your computer and run 'mvn clean install'.
 
@@ -17,6 +17,10 @@ No Warranties are given, your computer explodes or whatever due to the software 
 not care.
 
 Software is provided AS IS. No Guarantees are made.
+I do not claim to be a great programmer. I am not very interested in feedback. Cannot deal with that kindly go to the woods 
+and cry me a river.
+
+Just tell me what works and what does not.
 
 
 "But muh TCEE"
